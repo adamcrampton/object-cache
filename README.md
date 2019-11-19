@@ -19,5 +19,5 @@ Once initialised, you can use all Predis commands. See:
 * http://squizzle.me/php/predis/doc/
 * http://squizzle.me/php/predis/doc/Commands
 
-# Middleware
+## Middleware
 * //TODO: Add to readme
