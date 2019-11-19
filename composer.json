@@ -1,0 +1,36 @@
+{
+    "name": "adamcrampton/object-cache",
+    "description": "Redis object cache for Laravel",
+    "type": "library",
+    "require": {
+        "php": ">=7",
+        "predis/predis": "^1.1",
+        "illuminate/support": ">=5.5"
+    },
+    "require-dev": {
+        "laravel/framework": "^5.5",
+        "phpunit/phpunit": "^4.8|^5.2|^7.0",
+        "orchestra/testbench": "^3.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Crampton",
+            "email": "adam@adamcrampton.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "AdamCrampton\\ObjectCache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AdamCrampton\\ObjectCache\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+
+    },
+    "minimum-stability": "stable"
+}
