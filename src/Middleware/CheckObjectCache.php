@@ -59,7 +59,7 @@ class CheckObjectCache
 
         foreach ($objects as $objectValues) {
             // Ensure both items are received.
-            if (!array_key_exists('cacheKey', $objectValues) || (!array_key_exists('cacheTtl', $objectValues))) continue;
+            if (!array_key_exists('cacheKey', $objectValues) || (!array_key_exists('cacheTtl', $objectValues)) || (!array_key_exists('cacheMethod', $objectValues))) continue;
 
             // Hand off to check and set methods.
             $this->checkObject($objectValues);
