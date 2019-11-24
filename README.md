@@ -98,6 +98,6 @@ A convenience array of TTL values are included with the package. To use one of t
         'five' => 3024000,
         'six' => 3628800
     ]
-];```
+];
 
 
