@@ -10,6 +10,7 @@ use AdamCrampton\ObjectCache\ObjectCache;
 class CheckObjectCache
 {
     protected $objectCache;
+    protected $objects;
     protected $redis;
 
     /**
@@ -22,6 +23,14 @@ class CheckObjectCache
         // Initialise Redis and set ttl values.
         $this->objectCache = $redis;
         $this->redis = $this->objectCache->init();
+
+        // Set objects array.
+        $this->objects = [
+            // Example:
+            // 'cacheKey' => 'exampleKey',
+            // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour']
+            // 'cacheMethod' => 'setExample';
+        ];
     }
     
     /**
@@ -50,14 +59,7 @@ class CheckObjectCache
      */
     public function handleObjects()
     {
-        $objects = [
-            // Example:
-            // 'cacheKey' => 'exampleKey',
-            // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour']
-            // 'cacheMethod' => 'setExample'
-        ];
-
-        foreach ($objects as $objectValues) {
+        foreach ($this->objects as $objectValues) {
             // Ensure both items are received.
             if (!array_key_exists('cacheKey', $objectValues) || (!array_key_exists('cacheTtl', $objectValues)) || (!array_key_exists('cacheMethod', $objectValues))) continue;
 
