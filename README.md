@@ -23,9 +23,33 @@ Once initialised, you can use all Predis commands. See:
 The CheckObjectCache Middleware that ships with the package allows you to add cache objects to be automatically checked on each request, and if missing, set.
 
 An array of 3 values are required for each item. They are:
-* **cacheKeyTtl:** Name of the key for your object in the Redis store.
-* **cacheTTl:** Using either a pre-defined named TTL (see below), or a TTL in seconds.
+* **cacheKey:** Name of the key for your object in the Redis store.
+* **cacheTtl:** Using either a pre-defined named TTL (see below), or a TTL in seconds.
 * **cacheMethod:** The name of the method to regenerate the cache data if not found (i.e. if it is missing or expired).
+
+Easiest way to use the Middleware is to extend it into your own namespace, and set the objects property. An example:
+
+```namespace App\Http\Middleware\YourNameSpace
+
+use AdamCrampton\ObjectCache\ObjectCache;
+use AdamCrampton\ObjectCache\Middleware\CheckObjectCache;
+
+class YourObjectCacheCheck extends CheckObjectCache
+{
+    protected $objects;
+    
+    public function __construct(ObjectCache $objectCache)
+    {
+        parent::__construct($objectCache);
+    
+        $this->objects = [
+            'cacheKey' => 'exampleKey',
+            'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
+            'cacheMethod' => 'setExample'
+        ];
+    }
+}
+```
 
 ## Pre-configured TTL
 A convenience array of TTL values are included with the package. To use one of the values, initalise the Redis connection as mentioned above, and call the **ttl** property with the appropriate key name. Structure of this TTL array is as follows:
