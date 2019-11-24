@@ -24,7 +24,7 @@ The CheckObjectCache Middleware that ships with the package allows you to add ca
 
 An array of 3 values are required for each item. They are:
 * **cacheKey:** Name of the key for your object in the Redis store.
-* **cacheTTl:** Using either a pre-defined named TTL (see below), or a TTL in seconds.
+* **cacheTtl:** Using either a pre-defined named TTL (see below), or a TTL in seconds.
 * **cacheMethod:** The name of the method to regenerate the cache data if not found (i.e. if it is missing or expired).
 
 ## Pre-configured TTL
