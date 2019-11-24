@@ -28,8 +28,8 @@ class CheckObjectCache
         $this->objects = [
             // Example:
             // 'cacheKey' => 'exampleKey',
-            // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour']
-            // 'cacheMethod' => 'setExample';
+            // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
+            // 'cacheMethod' => 'setExample'
         ];
     }
     
