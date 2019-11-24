@@ -100,18 +100,4 @@ class ObjectCache
         // Initialise Predis.
         return new Client($parameters, $options);
     }
-
-    /**
-     * Get TTL in seconds by specified type and name.
-     *
-     * @param string $ttlType
-     * @param string $ttlName
-     * @return int
-     */
-    public static function getTtl($ttlType, $ttlName)
-    {
-        return array_key_exists($ttlType, $this->ttl) && array_key_exists($ttlName, $this->ttl[$ttlName])
-                ? $this->ttl[$ttlName]
-                : $this->ttl['default']['default'];
-    }
 }

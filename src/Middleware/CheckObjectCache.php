@@ -74,14 +74,28 @@ class CheckObjectCache
      */
     protected function checkObject(array $object)
     {
+        // Check TTL is valid.
+        $ttl = $this->checkTtl($object['cacheTtl']);
+
         return $this->redis->get($object['cacheKey']) ?: 
-            $this->redis->pipeline(function($p) use ($object) {
+            $this->redis->pipeline(function($p) use ($object, $ttl) {
                 $methodName = $object['cacheMethod'];
-                $p->set($object['cacheKey'], $this->$methodName($object['cacheTtl']), 'EX', $object['cacheTtl']);
+                $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
                 $p->get($object['cacheKey']);
             });
     }
     
+    /**
+     * Ensure a valid TTL is used.
+     *
+     * @param string $ttl
+     * @return int
+     */
+    protected function checkTtl($ttl)
+    {
+        return is_numeric($ttl) ? intval($ttl) : $this->redis->ttl['default']['default'];
+    }
+
     /**
      * Example Middleware method.
      *
