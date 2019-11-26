@@ -4,7 +4,8 @@ Laravel object cache package using Predis
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
 * Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
-* Add library middleware ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class``` to ```app/Http/Kernel.php```
+* Create your own Middleware to extend the package; after creating the Middleware class, add use statements for ```AdamCrampton\ObjectCache\ObjectCache``` and ```AdamCrampton\ObjectCache\Middleware\CheckObjectCache```, and be sure to extend ```CheckObjectCache```
+* Add your middleware ```\App\Http\Middleware\YourMiddlewareClass::class``` to ```app/Http/Kernel.php```
 * Configure your routes to use middleware - see https://laravel.com/docs/5.7/middleware#assigning-middleware-to-routes
 * Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
 * Add your Redis host to the app's .env (or localhost for local dev - ensure your environment has Redis installed)
