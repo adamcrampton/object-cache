@@ -8,7 +8,7 @@
         "illuminate/support": ">=5.5"
     },
     "require-dev": {
-        "laravel/framework": "^5.5",
+        "laravel/framework": "^5.8",
         "phpunit/phpunit": "^4.8|^5.2|^7.0",
         "orchestra/testbench": "^3.5"
     },
@@ -30,7 +30,14 @@
         }
     },
     "extra": {
-
+        "laravel": {
+            "providers": [
+                "AdamCrampton\\ObjectCache\\ObjectCacheServiceProvider"
+            ],
+            "aliases": {
+                "ObjectCache": "AdamCrampton\\ObjectCache\\ObjectCacheFacade"
+            }
+        }
     },
     "minimum-stability": "stable"
 }

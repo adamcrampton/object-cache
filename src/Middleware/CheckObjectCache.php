@@ -3,7 +3,6 @@
 namespace AdamCrampton\ObjectCache\Middleware;
 
 use Closure;
-use Config;
 
 use AdamCrampton\ObjectCache\ObjectCache;
 
