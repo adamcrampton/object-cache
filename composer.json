@@ -1,14 +1,21 @@
 {
     "name": "adamcrampton/object-cache",
     "description": "Redis object cache for Laravel",
+    "keywords": [
+        "cache",
+        "redis",
+        "cluster",
+        "middleware"
+    ],
+    "homepage": "https://github.com/adamcrampton/object-cache",
     "type": "library",
     "require": {
         "php": ">=7",
+        "laravel/framework": "^5.8",
         "predis/predis": "^1.1",
         "illuminate/support": ">=5.5"
     },
     "require-dev": {
-        "laravel/framework": "^5.8",
         "phpunit/phpunit": "^4.8|^5.2|^7.0",
         "orchestra/testbench": "^3.5"
     },
