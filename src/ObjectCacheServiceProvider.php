@@ -4,6 +4,8 @@ namespace AdamCrampton\ObjectCache;
 
 use Illuminate\Support\ServiceProvider;
 
+use AdamCrampton\ObjectCache\ObjectCache;
+
 class ObjectCacheServiceProvider extends ServiceProvider
 {
     /**
@@ -13,15 +15,17 @@ class ObjectCacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app->config->get('object_cache') === null) {
+            $this->app->config->set('object_cache', require __DIR__ . '/config/object_cache.php');
+        }
+
         $this->app->singleton(ObjectCache::class, function () {
             return new ObjectCache();
         });
 
         $this->app->alias(ObjectCache::class, 'object-cache');
 
-        if ($this->app->config->get('object_cache') === null) {
-            $this->app->config->set('object_cache', require __DIR__ . '/config/object_cache.php');
-        }
+        $this->app['router']->middleware('object', 'AdamCrampton\ObjectCache\CheckObjectCache');
     }
 
     public function boot()
