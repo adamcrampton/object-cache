@@ -3,12 +3,12 @@ Laravel object cache package using Predis
 
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
-* Add library service provider **AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class** and facade 'ObjectCache' => **AdamCrampton\ObjectCache\ObjectCacheFacade::class** to **config/app.php**
-* Add library middleware **\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class** to **app/Http/Kernel.php**
+* Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
+* Add library middleware ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class``` to ```app/Http/Kernel.php```
 * Configure your routes to use middleware - see https://laravel.com/docs/5.7/middleware#assigning-middleware-to-routes
-* Run ```php artisan vendor:publish``` - this will add a **object_cache.php** file to your project's config directory
+* Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
 * Add your Redis host to the app's .env (or localhost for local dev - ensure your environment has Redis installed)
-* Edit your settings in **config/object_cache.php**
+* Edit your settings in ```config/object_cache.php```
 
 ## Usage
 To initialise a connection:
@@ -52,7 +52,7 @@ class YourObjectCacheCheck extends CheckObjectCache
 ```
 
 ## Pre-configured TTL
-A convenience array of TTL values are included with the package. To use one of the values, initalise the Redis connection as mentioned above, and call the **ttl** property with the appropriate key name. Structure of this TTL array is as follows:
+A convenience array of TTL values are included with the package. To use one of the values, initalise the Redis connection as mentioned above, and call the ```ttl``` property with the appropriate key name. Structure of this TTL array is as follows:
 
 ```$this->ttl = [
     'default' => [
