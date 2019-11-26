@@ -25,7 +25,14 @@ class CheckObjectCache
         $this->ttl = $this->objectCache->ttl;
         $this->redis = $this->objectCache->init();
 
-        // Set objects array.
+        /* 
+            Add keys of Redis objects you want to check and set in the Middleware here.
+
+            You must specify an array of values for each object:
+            cacheKey => Redis Object key
+            cacheTtl => either a named TTL from the ObjectCache class, or a numeric value in seconds
+            cacheMethod => Middleware method used to repopulate this data in the cache
+        */
         $this->objects = [
             [
                 // Example:
@@ -52,11 +59,7 @@ class CheckObjectCache
     }
 
     /**
-     * Add keys of Redis objects you want to check and set in the Middleware here.
-     * You must specify an array of values for each object:
-     * cacheKey => Redis Object key
-     * cacheTtl => either a named TTL from the ObjectCache class, or a numeric value in seconds
-     * cacheMethod => Middleware method used to repopulate this data in the cache
+     * Ensure all values are received, then check and set in Redis.
      * 
      * @return void
      */
