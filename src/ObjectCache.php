@@ -7,7 +7,7 @@ use Predis\Client;
 
 class ObjectCache
 {
-    private $ttl;
+    public $ttl;
 
     public function __construct()
     {

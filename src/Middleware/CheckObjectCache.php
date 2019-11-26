@@ -25,10 +25,12 @@ class CheckObjectCache
 
         // Set objects array.
         $this->objects = [
-            // Example:
-            // 'cacheKey' => 'exampleKey',
-            // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
-            // 'cacheMethod' => 'setExample'
+            [
+                // Example:
+                // 'cacheKey' => 'exampleKey',
+                // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
+                // 'cacheMethod' => 'setExample'
+            ]
         ];
     }
     
