@@ -9,6 +9,7 @@ use AdamCrampton\ObjectCache\ObjectCache;
 class CheckObjectCache
 {
     protected $objectCache;
+    protected $ttl;
     protected $objects;
     protected $redis;
 
@@ -21,6 +22,7 @@ class CheckObjectCache
     {
         // Initialise Redis and set ttl values.
         $this->objectCache = $redis;
+        $this->ttl = $this->objectCache->ttl;
         $this->redis = $this->objectCache->init();
 
         // Set objects array.

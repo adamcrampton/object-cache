@@ -51,14 +51,10 @@ class YourObjectCacheCheck extends CheckObjectCache
 
     public function setExample()
     {
-        $prices = PartPrice::select(['part_id', 'price'])
+        return PartPrice::select(['part_id', 'price'])
             ->where('code', $priceCode)
             ->get()
             ->toJson();
-
-        $partPrices = $this->redis->pipeline(function($p) use ($prices) {
-            $p->set('part_prices', $prices, 'EX', $this->ttl['default']);
-        });
     }
 }
 ```
