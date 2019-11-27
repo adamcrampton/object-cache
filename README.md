@@ -32,6 +32,7 @@ Easiest way to use the Middleware is to extend it into your own namespace, and s
 
 ```namespace App\Http\Middleware\YourNameSpace
 
+use App\Models\PartPrice;
 use AdamCrampton\ObjectCache\ObjectCache;
 use AdamCrampton\ObjectCache\Middleware\CheckObjectCache;
 
@@ -53,7 +54,6 @@ class YourObjectCacheCheck extends CheckObjectCache
     public function setExample()
     {
         return PartPrice::select(['part_id', 'price'])
-            ->where('code', $priceCode)
             ->get()
             ->toJson();
     }
