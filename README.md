@@ -1,5 +1,5 @@
 # object-cache
-This package will allow you to set and forget objects in your Redis cache, with easily extendable Middleware and convenient TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
+This Laravel package will allow you to set and forget objects in your Redis cache, with easily extendable Middleware and convenient TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
 
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
