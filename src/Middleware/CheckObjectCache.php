@@ -90,15 +90,12 @@ class CheckObjectCache
             // Set the method to use.
             $methodName = $object['cacheMethod'];
 
-            // Check the method name is valid.
-            if (!is_callable($this->$methodName($ttl))) return false;
+            // Check the item is set - if false, the method failed to return a value.
+            if ($this->$methodName($ttl) === false) return false;
 
-                // Check the item is set - if false, the method failed to return a value.
-                if ($this->$methodName($ttl) === false) return false;
-
-                $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
-                $p->get($object['cacheKey']);
-            });
+            $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
+            $p->get($object['cacheKey']);
+        });
     }
     
     /**
