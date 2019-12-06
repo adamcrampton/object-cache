@@ -16,14 +16,14 @@ class CheckObjectCache
     /**
      * Initialise Middleware Dependencies.
      *
-     * @param RedisClusterService $redis
+     * @param ObjectCache $redis
      */
     public function __construct(ObjectCache $redis)
     {
         // Initialise Redis and set ttl values.
         $this->objectCache = $redis;
         $this->ttl = $this->objectCache->ttl;
-        $this->redis = $this->objectCache->init();
+        $this->redis = $this->objectCache::init();
 
         /* 
             Add keys of Redis objects you want to check and set in the Middleware here.
