@@ -85,9 +85,17 @@ class CheckObjectCache
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
 
+        // Check the method name is valid.
+        if (!is_callable($this->$methodName)) return false;
+
         return $this->redis->get($object['cacheKey']) ?: 
             $this->redis->pipeline(function($p) use ($object, $ttl) {
+                // Set the method to use.
                 $methodName = $object['cacheMethod'];
+
+                // Check the item is set - if false, the method failed to return a value.
+                if ($this->$methodName($ttl) === false) return false;
+
                 $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
                 $p->get($object['cacheKey']);
             });
