@@ -16,7 +16,7 @@ class CheckObjectCache
     /**
      * Initialise Middleware Dependencies.
      *
-     * @param ObjectCache $redis
+     * @param RedisClusterService $redis
      */
     public function __construct(ObjectCache $redis)
     {
@@ -84,14 +84,14 @@ class CheckObjectCache
     {
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
-
-        // Check the method name is valid.
-        if (!is_callable($this->$methodName)) return false;
-
+        
         return $this->redis->get($object['cacheKey']) ?: 
-            $this->redis->pipeline(function($p) use ($object, $ttl) {
-                // Set the method to use.
-                $methodName = $object['cacheMethod'];
+        $this->redis->pipeline(function($p) use ($object, $ttl) {
+            // Set the method to use.
+            $methodName = $object['cacheMethod'];
+
+            // Check the method name is valid.
+            if (!is_callable($this->$methodName($ttl))) return false;
 
                 // Check the item is set - if false, the method failed to return a value.
                 if ($this->$methodName($ttl) === false) return false;
