@@ -89,7 +89,7 @@ class ObjectCache
      *
      * @return void
      */
-    public function init()
+    public static function init()
     {
         // Set Redis connection.
         $parameters = Config::get('object_cache.parameters');
