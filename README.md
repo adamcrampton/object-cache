@@ -45,9 +45,11 @@ class YourObjectCacheCheck extends CheckObjectCache
         parent::__construct($objectCache);
     
         $this->objects = [
-            'cacheKey' => 'exampleKey',
-            'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
-            'cacheMethod' => 'setExample'
+            [
+                'cacheKey' => 'exampleKey',
+                'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
+                'cacheMethod' => 'setExample'
+            ]
         ];
     }
 
