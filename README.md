@@ -1,15 +1,15 @@
 # object-cache
-Laravel object cache package using Predis
+This Laravel package will allow you to set and forget objects in your Redis cache, with easily extendable Middleware and convenient TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
 
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
 * Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
 * Create your own Middleware to extend the package; after creating the Middleware class, add use statements for ```AdamCrampton\ObjectCache\ObjectCache``` and ```AdamCrampton\ObjectCache\Middleware\CheckObjectCache```, and be sure to extend ```CheckObjectCache```
 * Add your middleware ```\App\Http\Middleware\YourMiddlewareClass::class``` to ```app/Http/Kernel.php```
-* Configure your routes to use middleware - see https://laravel.com/docs/5.7/middleware#assigning-middleware-to-routes
+* Configure your routes to use middleware - see https://laravel.com/docs/5.8/middleware#assigning-middleware-to-routes
 * Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
 * Add your Redis host to the app's .env (or localhost for local dev - ensure your environment has Redis installed)
-* Edit your settings in ```config/object_cache.php```
+* Edit your settings in ```config/object_cache.php``` - see https://github.com/nrk/predis/wiki/Connection-Parameters
 
 ## Usage
 To initialise a connection:
@@ -32,6 +32,7 @@ Easiest way to use the Middleware is to extend it into your own namespace, and s
 
 ```namespace App\Http\Middleware\YourNameSpace
 
+use App\Models\PartPrice;
 use AdamCrampton\ObjectCache\ObjectCache;
 use AdamCrampton\ObjectCache\Middleware\CheckObjectCache;
 
@@ -53,7 +54,6 @@ class YourObjectCacheCheck extends CheckObjectCache
     public function setExample()
     {
         return PartPrice::select(['part_id', 'price'])
-            ->where('code', $priceCode)
             ->get()
             ->toJson();
     }
