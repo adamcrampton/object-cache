@@ -62,6 +62,23 @@ class YourObjectCacheCheck extends CheckObjectCache
 }
 ```
 
+## Get Helper
+Once initialised, you can fetch an object from the cache using the provided helper. The two parameters you need to pass in are the key and JSON decode option.
+
+If you are passing in the decode option, set this to 'array' or 'object' for the correct return format. Example:
+
+```
+    /**
+     * Fetch part data for the front end.
+     *
+     * @return array
+     */
+    protected function buildPartData(Request $request)
+    {
+        return ObjectCache::get('dealer_123456_part_data', 'array');
+    }
+```
+
 ## Pre-configured TTL
 A convenience array of TTL values are included with the package. To use one of the values, initalise the Redis connection as mentioned above, and call the ```ttl``` property with the appropriate key name. Structure of this TTL array is as follows:
 
