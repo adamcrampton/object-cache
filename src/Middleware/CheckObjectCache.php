@@ -85,17 +85,25 @@ class CheckObjectCache
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
         
-        return $this->redis->get($object['cacheKey']) ?: 
-        $this->redis->pipeline(function($p) use ($object, $ttl) {
-            // Set the method to use.
-            $methodName = $object['cacheMethod'];
+        $data = $this->redis->get($object['cacheKey']) ?: 
+            $this->redis->pipeline(function($p) use ($object, $ttl) {
+                // Set the method to use.
+                $methodName = $object['cacheMethod'];
 
-            // Check the item is set - if false, the method failed to return a value.
-            if ($this->$methodName($ttl) === false) return false;
+                // Check the item is set - if false, the method failed to return a value.
+                if ($this->$methodName($ttl) === false) return false;
 
-            $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
-            $p->get($object['cacheKey']);
-        });
+                $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
+                $p->get($object['cacheKey']);
+            });
+
+        // Redis gotcha: 
+        // If the data is being returned by the pipelined command, it will be an array of:
+        // [0] => Status (object)
+        // [1] => JSON data
+        //
+        // Otherwise, it'll just be a JSON object which we can decode right away.
+        return is_array($data) ? json_decode($data[1], true) : json_decode($data, true);
     }
     
     /**
