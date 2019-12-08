@@ -100,4 +100,19 @@ class ObjectCache
         // Initialise Predis.
         return new Client($parameters, $options);
     }
+
+    /**
+     * Returns data in useable format.
+     * If decode is not false, and not set to 'array', an object will be returned.
+     *
+     * @param bool $decode
+     * @return array
+     */
+    public static function get($cacheKey, $decode = false)
+    {   
+        $redis = self::init();
+        $data = $redis->get($cacheKey);
+
+        return $decode ? json_decode($data, $decode === 'array') : $data;
+    }
 }

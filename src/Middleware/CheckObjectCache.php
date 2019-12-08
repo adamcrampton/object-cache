@@ -96,14 +96,6 @@ class CheckObjectCache
                 $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
                 $p->get($object['cacheKey']);
             });
-
-        // Redis gotcha: 
-        // If the data is being returned by the pipelined command, it will be an array of:
-        // [0] => Status (object)
-        // [1] => JSON data
-        //
-        // Otherwise, it'll just be a JSON object which we can decode right away.
-        return is_array($data) ? json_decode($data[1], true) : json_decode($data, true);
     }
     
     /**
