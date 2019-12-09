@@ -94,7 +94,6 @@ class CheckObjectCache
                 if ($this->$methodName($ttl) === false) return false;
 
                 $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
-                $p->get($object['cacheKey']);
             });
     }
     
