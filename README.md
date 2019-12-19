@@ -7,6 +7,7 @@ If upgrading from v3, you will need to make the following changes to your implem
 * Add a ```methodClass``` key to your ```config/object_cache.php``` file, and set that value to the fully namespaced class name you created in the previous step.
 * Delete your object cache Middleware.
 * Change the Middleware settings in ```app/Http/Kernel.php``` to use the package Middleware: ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class```
+* See the Configuration section below for additional config options you may not have set.
 
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
@@ -16,8 +17,13 @@ If upgrading from v3, you will need to make the following changes to your implem
 * Configure your routes to use middleware - see https://laravel.com/docs/5.8/middleware#assigning-middleware-to-routes
 * Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
 * Add your Redis host to the app's .env (or localhost for local dev - ensure your environment has Redis installed)
-* Edit the ```parameters``` and ```options``` values in ```config/object_cache.php``` - see https://github.com/nrk/predis/wiki/Connection-Parameters
-* Also in ```config/object_cache.php``` add the class name with full namespace to the ```methodClass``` key
+
+## Configuration
+Configuration can be found in the published ```config/object_cache.php``` file.
+* Edit the ```parameters``` and ```options``` values for the Redis connection - see https://github.com/nrk/predis/wiki/Connection-Parameters
+* Add the class name with full namespacing to the ```methodClass``` key
+* The settings under ```fallback``` relate to the Get Helper (details further down). If you would like the library to manually fetch the data if the Redis get fails, set this to true. The ```passRequest``` option forces the helper to pass the request object into the constructor of your cache method class (only set to true if this is necessary for your application)
+* Setting ```logErrors``` to true will enable the Get Helper to log any failed attempts to get values from Redis and/or fallback attempts
 
 ## Usage
 To initialise a connection:
