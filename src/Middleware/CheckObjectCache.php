@@ -78,8 +78,10 @@ class CheckObjectCache
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
 
+        // Get the method store class instance.
         $methodStore = $this->methodStore;
         
+        // Get data, set in cache if not found.
         $data = $this->redis->get($object['cacheKey']) ?? 
             $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
                 // Set the method to use.
