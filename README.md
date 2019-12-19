@@ -1,15 +1,16 @@
 # object-cache
-This Laravel package will allow you to set and forget objects in your Redis cache, with easily extendable Middleware and convenient TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
+This Laravel package will allow you to set and forget objects in your Redis cache, with automated Middleware and convenient pre-bundled TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
 
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
 * Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
-* Create your own Middleware to extend the package; after creating the Middleware class, add use statements for ```AdamCrampton\ObjectCache\ObjectCache``` and ```AdamCrampton\ObjectCache\Middleware\CheckObjectCache```, and be sure to extend ```CheckObjectCache```
-* Add your middleware ```\App\Http\Middleware\YourMiddlewareClass::class``` to ```app/Http/Kernel.php```
+* Create a class for storing your methods, adding use statements for ```AdamCrampton\ObjectCache\ObjectCache``` and ```AdamCrampton\ObjectCache\Middleware\CheckObjectCache```
+* Add the package Middleware ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class``` to ```app/Http/Kernel.php```
 * Configure your routes to use middleware - see https://laravel.com/docs/5.8/middleware#assigning-middleware-to-routes
 * Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
 * Add your Redis host to the app's .env (or localhost for local dev - ensure your environment has Redis installed)
-* Edit your settings in ```config/object_cache.php``` - see https://github.com/nrk/predis/wiki/Connection-Parameters
+* Edit the ```parameters``` and ```options``` values in ```config/object_cache.php``` - see https://github.com/nrk/predis/wiki/Connection-Parameters
+* Also in ```config/object_cache.php``` add the class name with full namespace to the ```methodClass``` key
 
 ## Usage
 To initialise a connection:
@@ -21,24 +22,24 @@ Once initialised, you can use all Predis commands. See:
 * http://squizzle.me/php/predis/doc/Commands
 
 ## Middleware
-The CheckObjectCache Middleware that ships with the package allows you to add cache objects to be automatically checked on each request, and if missing, set.
+The CheckObjectCache Middleware that ships with the package allows you to add cache objects to be automatically checked on each request, and if missing, set. You will need to add an ```$this->objects``` array (configuration) and each corresponding method to your cache store class (mentioned above in installation).
 
-An array of 3 values are required for each item. They are:
+An array of 3 values are required for each item in the ```$this->objects``` array. They are:
 * **cacheKey:** Name of the key for your object in the Redis store.
 * **cacheTtl:** Using either a pre-defined named TTL (see below), or a TTL in seconds.
 * **cacheMethod:** The name of the method to regenerate the cache data if not found (i.e. if it is missing or expired).
 
-Easiest way to use the Middleware is to extend it into your own namespace, and set the objects property. An example:
+An example of an implementation using a cache store class:
 
-```namespace App\Http\Middleware\YourNameSpace
+```namespace App\ObjectCache;
 
 use App\Models\PartPrice;
 use AdamCrampton\ObjectCache\ObjectCache;
 use AdamCrampton\ObjectCache\Middleware\CheckObjectCache;
 
-class YourObjectCacheCheck extends CheckObjectCache
+class CacheMethodStore
 {
-    protected $objects;
+    public $objects;
     
     public function __construct(ObjectCache $objectCache)
     {
