@@ -22,4 +22,16 @@ return [
         Set the class with namespace where the cache generation methods are stored.
     */
     'methodClass' => 'AdamCrampton\ObjectCache\ObjectCache\CacheMethodStore',
+    /*
+        Fallback settings - when Redis is unavailable.
+    */
+    'fallback' => [
+        'enabled' => true,
+        // Pass the request object into the constructor of your cache store class.
+        'passRequest' => false
+    ],
+    /*
+        Log errors to debug.
+    */
+    'logErrors' => false
 ];

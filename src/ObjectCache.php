@@ -3,6 +3,7 @@
 namespace AdamCrampton\ObjectCache;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Predis\Client;
 
 class ObjectCache
@@ -110,8 +111,35 @@ class ObjectCache
      */
     public static function get($cacheKey, $decode = false)
     {   
+        $request = request();
         $redis = self::init();
         $data = $redis->get($cacheKey);
+        $passRequest = Config::get('object_cache.fallback.passRequest') ?? false;
+        $fallback = Config::get('object_cache.fallback.enabled') ?? false;
+        $log = Config::get('object_cache.logErrors') ?? false;
+
+        // If no data found, manually fetch the value.
+        if (is_null($data)) {
+            if ($log) {
+                Log::debug('Could not get data from Redis for cache key ' . $cacheKey);
+            }
+
+            if ($fallback) {
+                $methodClass = Config::get('object_cache.methodClass');
+                $methodStore = $passRequest ? new $methodClass($request) : new $methodClass;
+                $cacheMethod = collect($methodStore->objects)->where('cacheKey', $cacheKey)
+                                                                ->pluck('cacheMethod')[0];
+                try {
+                    $data = $methodStore->$cacheMethod();
+                } catch (\Exception $e) {
+                    $data = false;
+
+                    if ($log) {
+                        Log::debug('Could not fetch data for method ' . $cacheMethod);
+                    }
+                }
+            }
+        }
 
         return $decode ? json_decode($data, $decode === 'array') : $data;
     }
