@@ -2,9 +2,9 @@
     "name": "adamcrampton/object-cache",
     "description": "Redis object cache for Laravel",
     "keywords": [
+        "laravel",
         "cache",
         "redis",
-        "cluster",
         "middleware"
     ],
     "homepage": "https://github.com/adamcrampton/object-cache",
