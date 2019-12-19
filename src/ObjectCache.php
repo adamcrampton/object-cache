@@ -2,7 +2,7 @@
 
 namespace AdamCrampton\ObjectCache;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Predis\Client;
 
 class ObjectCache

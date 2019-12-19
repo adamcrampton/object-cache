@@ -2,45 +2,38 @@
 
 namespace AdamCrampton\ObjectCache\Middleware;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Http\Request;
 use Closure;
 
 use AdamCrampton\ObjectCache\ObjectCache;
 
 class CheckObjectCache
 {
+    protected $methodClass;
+    protected $methodStore;
     protected $objectCache;
-    protected $ttl;
     protected $objects;
     protected $redis;
+    protected $ttl;
 
     /**
-     * Initialise Middleware Dependencies.
-     *
-     * @param RedisClusterService $redis
+     * Initialise Middleware Dependencies + Settings.
+     * 
+     * @param AdamCrampton\ObjectCache\ObjectCache $redis
+     * @param Illuminate\Http\Request $request
      */
-    public function __construct(ObjectCache $redis)
+    public function __construct(ObjectCache $redis, Request $request)
     {
-        // Initialise Redis and set ttl values.
+        // Initialise Cache.
         $this->objectCache = $redis;
-        $this->ttl = $this->objectCache->ttl;
         $this->redis = $this->objectCache::init();
+        $this->ttl = $this->objectCache->ttl;
 
-        /* 
-            Add keys of Redis objects you want to check and set in the Middleware here.
-
-            You must specify an array of values for each object:
-            cacheKey => Redis Object key
-            cacheTtl => either a named TTL from the ObjectCache class, or a numeric value in seconds
-            cacheMethod => Middleware method used to repopulate this data in the cache
-        */
-        $this->objects = [
-            [
-                // Example:
-                // 'cacheKey' => 'exampleKey',
-                // 'cacheTtl' => $this->objectCache->ttl['hours']['twentyFour'],
-                // 'cacheMethod' => 'setExample'
-            ]
-        ];
+        // Configure methods and objects.
+        $this->methodClass = Config::get('object_cache.methodClass');
+        $this->methodStore = new $this->methodClass($request);
+        $this->objects = $this->methodStore->objects;
     }
     
     /**
@@ -84,16 +77,18 @@ class CheckObjectCache
     {
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
+
+        $methodStore = $this->methodStore;
         
         $data = $this->redis->get($object['cacheKey']) ?: 
-            $this->redis->pipeline(function($p) use ($object, $ttl) {
+            $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
                 // Set the method to use.
                 $methodName = $object['cacheMethod'];
 
                 // Check the item is set - if false, the method failed to return a value.
-                if ($this->$methodName($ttl) === false) return false;
+                if ($methodStore->$methodName($ttl) === false) return false;
 
-                $p->set($object['cacheKey'], $this->$methodName($ttl), 'EX', $object['cacheTtl']);
+                $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
             });
     }
     
@@ -106,17 +101,5 @@ class CheckObjectCache
     protected function checkTtl($ttl)
     {
         return is_numeric($ttl) ? intval($ttl) : $this->redis->ttl['default']['default'];
-    }
-
-    /**
-     * Example Middleware method.
-     *
-     * @return array
-     */
-    protected function setExample()
-    {
-        return json_encode([
-            'data' => 'Some data'
-        ]);
     }
 }
