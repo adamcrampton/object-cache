@@ -1,6 +1,13 @@
 # object-cache
 This Laravel package will allow you to set and forget objects in your Redis cache, with automated Middleware and convenient pre-bundled TTL settings. All you need to supply is a TTL, key name, and method for regenerating the value.
 
+## Upgrading from v3.x.x
+If upgrading from v3, you will need to make the following changes to your implementation:
+* Create a PHP class for storing your methods and method configs, and migrate the ```$this->objects``` array and your cache methods across. Be sure to move across any dependencies to the new class.
+* Add a ```methodClass``` key to your ```config/object_cache.php``` file, and set that value to the fully namespaced class name you created in the previous step.
+* Delete your object cache Middleware.
+* Change the Middleware settings in ```app/Http/Kernel.php``` to use the package Middleware: ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class```
+
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
 * Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
