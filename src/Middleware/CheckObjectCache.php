@@ -85,9 +85,7 @@ class CheckObjectCache
                 // Set the method to use.
                 $methodName = $object['cacheMethod'];
 
-                // Check the item is set - if false, the method failed to return a value.
-                if ($methodStore->$methodName($ttl) === false) return false;
-
+                // Fetch data + set in cache.
                 $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
             });
     }
