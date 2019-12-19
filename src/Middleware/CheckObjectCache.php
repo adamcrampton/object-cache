@@ -80,7 +80,7 @@ class CheckObjectCache
 
         $methodStore = $this->methodStore;
         
-        $data = $this->redis->get($object['cacheKey']) ?: 
+        $data = $this->redis->get($object['cacheKey']) ?? 
             $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
                 // Set the method to use.
                 $methodName = $object['cacheMethod'];
