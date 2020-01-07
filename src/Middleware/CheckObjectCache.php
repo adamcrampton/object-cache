@@ -2,9 +2,10 @@
 
 namespace AdamCrampton\ObjectCache\Middleware;
 
+use Closure;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
-use Closure;
+use Illuminate\Support\Facades\Log;
 
 use AdamCrampton\ObjectCache\ObjectCache;
 
@@ -82,14 +83,18 @@ class CheckObjectCache
         $methodStore = $this->methodStore;
         
         // Get data, set in cache if not found.
-        $data = $this->redis->get($object['cacheKey']) ?? 
-            $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
-                // Set the method to use.
-                $methodName = $object['cacheMethod'];
-
-                // Fetch data + set in cache.
-                $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
-            });
+        try {
+            $data = $this->redis->get($object['cacheKey']) ?? 
+                $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
+                    // Set the method to use.
+                    $methodName = $object['cacheMethod'];
+    
+                    // Fetch data + set in cache.
+                    $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
+                });
+        } catch (\Exception $e) {
+            Log::debug('Could not get data from Redis for cache key ' . $object['cacheKey']);
+        }
     }
     
     /**
