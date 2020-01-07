@@ -112,18 +112,20 @@ class ObjectCache
     public static function get($cacheKey, $decode = false)
     {   
         $request = request();
+        $passRequest = Config::get('object_cache.fallback.passRequest') ?? false;
+        $fallback = Config::get('object_cache.fallback.enabled') ?? false;
+        $log = Config::get('object_cache.logErrors') ?? false;
 
+        // Attempt connection and log if failed.
         try {
             $redis = self::init();
             $data = $redis->get($cacheKey);
         } catch (\Exception $e) {
             $data = null;
-            Log::debug('Error retrieving Redis key ' . $cacheKey . ': ' . $e->getMessage());
+            if ($log) {
+                Log::debug('Error retrieving Redis key ' . $cacheKey . ': ' . $e->getMessage());
+            }
         }
-        
-        $passRequest = Config::get('object_cache.fallback.passRequest') ?? false;
-        $fallback = Config::get('object_cache.fallback.enabled') ?? false;
-        $log = Config::get('object_cache.logErrors') ?? false;
 
         // If no data found, manually fetch the value.
         if (is_null($data)) {

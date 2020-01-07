@@ -76,6 +76,8 @@ class CheckObjectCache
      */
     protected function checkObject(array $object)
     {
+        $log = Config::get('object_cache.logErrors') ?? false;
+
         // Check TTL is valid.
         $ttl = $this->checkTtl($object['cacheTtl']);
 
@@ -93,7 +95,9 @@ class CheckObjectCache
                     $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
                 });
         } catch (\Exception $e) {
-            Log::debug('Could not get data from Redis for cache key ' . $object['cacheKey']);
+            if ($log) {
+                Log::debug('Could not get data from Redis for cache key ' . $object['cacheKey']);
+            }
         }
     }
     
