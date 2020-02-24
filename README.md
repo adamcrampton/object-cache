@@ -12,7 +12,7 @@ If upgrading from v3, you will need to make the following changes to your implem
 ## Installation
 * Run ```composer require adamcrampton/object-cache``` in your project directory
 * Add library service provider ```AdamCrampton\ObjectCache\ObjectCacheServiceProvider::class``` and facade ```'ObjectCache' => AdamCrampton\ObjectCache\ObjectCacheFacade::class``` to ```config/app.php```
-* Create a class for storing your methods, adding use statements for ```AdamCrampton\ObjectCache\ObjectCache``` and ```AdamCrampton\ObjectCache\Middleware\CheckObjectCache```
+* Create a class for storing your methods, adding use statement for ```AdamCrampton\ObjectCache\ObjectCache```
 * Add the package Middleware ```\AdamCrampton\ObjectCache\Middleware\CheckObjectCache::class``` to ```app/Http/Kernel.php```
 * Configure your routes to use middleware - see https://laravel.com/docs/5.8/middleware#assigning-middleware-to-routes
 * Run ```php artisan vendor:publish``` - this will add a ```object_cache.php``` file to your project's config directory
@@ -48,16 +48,15 @@ An example of an implementation using a cache store class:
 
 use App\Models\PartPrice;
 use AdamCrampton\ObjectCache\ObjectCache;
-use AdamCrampton\ObjectCache\Middleware\CheckObjectCache;
 
 class CacheMethodStore
 {
     public $objects;
     
-    public function __construct(ObjectCache $objectCache)
-    {
-        parent::__construct($objectCache);
-    
+    public function __construct()
+    {   
+        $this->objectCache = new ObjectCache();
+        
         $this->objects = [
             [
                 'cacheKey' => 'exampleKey',
