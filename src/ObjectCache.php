@@ -144,7 +144,7 @@ class ObjectCache
                     $data = false;
 
                     if ($log) {
-                        Log::debug('Could not fetch data for method ' . $cacheMethod);
+                        Log::debug('Could not fetch data for method ' . $cacheMethod . ': ' . $e->getMessage());
                     }
                 }
             }
