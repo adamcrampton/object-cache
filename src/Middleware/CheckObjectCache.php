@@ -33,6 +33,7 @@ class CheckObjectCache
 
         // Configure methods and objects.
         $this->methodClass = Config::get('object_cache.methodClass');
+        
         $this->methodStore = new $this->methodClass($request);
         $this->objects = $this->methodStore->objects;
     }
@@ -45,9 +46,9 @@ class CheckObjectCache
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $this->handleObjects();
+        $this->handleObjects($request);
 
         return $next($request);
     }
@@ -57,14 +58,14 @@ class CheckObjectCache
      * 
      * @return void
      */
-    public function handleObjects()
+    public function handleObjects(Request $request)
     {
         foreach ($this->objects as $objectValues) {
             // Ensure both items are received.
             if (!array_key_exists('cacheKey', $objectValues) || (!array_key_exists('cacheTtl', $objectValues)) || (!array_key_exists('cacheMethod', $objectValues))) continue;
 
             // Hand off to check and set methods.
-            $this->checkObject($objectValues);
+            $this->checkObject($objectValues, $request);
         }
     }
 
@@ -74,7 +75,7 @@ class CheckObjectCache
      *
      * @return mixed
      */
-    protected function checkObject(array $object)
+    protected function checkObject(array $object, Request $request)
     {
         $log = Config::get('object_cache.logErrors') ?? false;
 
@@ -87,12 +88,12 @@ class CheckObjectCache
         // Get data, set in cache if not found.
         try {
             $data = $this->redis->get($object['cacheKey']) ?? 
-                $this->redis->pipeline(function($p) use ($object, $ttl, $methodStore) {
+                $this->redis->pipeline(function($p) use ($object, $request, $methodStore) {
                     // Set the method to use.
                     $methodName = $object['cacheMethod'];
     
                     // Fetch data + set in cache.
-                    $p->set($object['cacheKey'], $methodStore->$methodName($ttl), 'EX', $object['cacheTtl']);
+                    $p->set($object['cacheKey'], $methodStore->$methodName($request), 'EX', $object['cacheTtl']);
                 });
         } catch (\Exception $e) {
             if ($log) {
