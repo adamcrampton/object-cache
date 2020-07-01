@@ -27,7 +27,7 @@ Configuration can be found in the published ```config/object_cache.php``` file.
 
 ## Usage
 To initialise a connection:
-* Add ```use AdamCrampton\ObjectCache``` to the class
+* Add ```use AdamCrampton\ObjectCache\ObjectCache``` to the class
 * Declare a variable to use for your connection, e.g. ```$redis = ObjectCache::init()```
 
 Once initialised, you can use all Predis commands. See:
