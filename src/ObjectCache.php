@@ -139,7 +139,7 @@ class ObjectCache
                 $cacheMethod = collect($methodStore->objects)->where('cacheKey', $cacheKey)
                                                                 ->pluck('cacheMethod')[0];
                 try {
-                    $data = $methodStore->$cacheMethod();
+                    $data = $methodStore->$cacheMethod($request);
                 } catch (\Exception $e) {
                     $data = false;
 
